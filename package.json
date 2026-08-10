@@ -1,0 +1,14 @@
+{
+  "name": "leycti-ia-2026",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "start": "python3 -m http.server 8080"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

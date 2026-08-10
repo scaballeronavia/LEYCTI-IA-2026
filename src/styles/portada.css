@@ -1,0 +1,18 @@
+/* Composición y valores visuales replicados del HTML de referencia para la portada. */
+.cover-slide { min-height: 100%; display: flex; flex-direction: column; overflow: hidden; padding: clamp(27px, 3.7vw, 68px) clamp(35px, 5.5vw, 100px) 26px; background: radial-gradient(circle at 80% 35%, rgba(255,196,0,.1), transparent 16%), radial-gradient(circle at 67% 68%, rgba(244,124,0,.13), transparent 33%), #090909; }
+.cover-grid { position: absolute; inset: 0; pointer-events: none; opacity: .24; background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px); background-size: 69px 69px; mask-image: linear-gradient(90deg, transparent, black 38%, black 90%, transparent); }
+.cover-grid::after { content: ""; position: absolute; width: 44vw; aspect-ratio: 1; top: 17%; right: 8%; border: 1px solid var(--tecba-orange); border-radius: 50%; box-shadow: 0 0 0 38px rgba(244,124,0,.06), 0 0 0 115px rgba(244,124,0,.04), 0 0 78px 20px rgba(244,124,0,.1); }
+.bolivia-future-map { position: absolute; z-index: 0; top: 13%; right: 4.5%; width: min(34vw, 590px); height: min(68vh, 650px); opacity: .95; pointer-events: none; }
+.bolivia-future-map::before { content: ""; position: absolute; inset: 7% 0 0; border: 1px solid rgba(255,196,0,.25); border-radius: 50%; box-shadow: 0 0 0 32px rgba(244,124,0,.04), 0 0 0 94px rgba(244,124,0,.025), 0 0 66px 13px rgba(244,124,0,.13); }
+.bolivia-map-svg { position: absolute; z-index: 1; inset: 1% 4% 0; background: url("../../assets/images/bolivia-map.svg") center / contain no-repeat; filter: drop-shadow(0 0 18px rgba(255,196,0,.4)) drop-shadow(0 0 44px rgba(244,124,0,.22)); }
+.cover-content { z-index: 1; position: relative; display: flex; flex: 1; flex-direction: column; justify-content: center; max-width: 990px; padding: 4vh 0; }
+.cover-content .kicker { color: #c4c1ba; }
+.cover-content h1 { margin: 0; color: #fff; font-size: clamp(57px, 7.25vw, 130px); font-weight: 820; letter-spacing: -.073em; line-height: .86; }
+.cover-content mark { color: var(--tecba-yellow); background: transparent; }
+.cover-title-de { display: inline-flex; align-items: center; gap: .18em; }
+.title-flag { width: 1.52em; height: .78em; margin-left: .04em; border-color: rgba(255,255,255,.65); transform: translateY(-.03em); }
+.cover-line { max-width: 640px; display: grid; grid-template-columns: 95px 1fr; align-items: center; gap: 18px; margin-top: clamp(31px, 5.6vh, 68px); }
+.cover-line span { height: 2px; background: linear-gradient(90deg, var(--tecba-orange), var(--tecba-yellow)); box-shadow: 0 0 18px rgba(244,124,0,.6); }
+.cover-line p { margin: 0; color: #c7c4bd; font-size: clamp(14px, 1.15vw, 19px); line-height: 1.5; }
+.cover-footer { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; color: #9f9b93; font-size: 10px; letter-spacing: .05em; }
+.cover-footer span:last-child { color: var(--tecba-yellow); font-weight: 780; }
