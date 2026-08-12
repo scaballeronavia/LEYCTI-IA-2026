@@ -5,12 +5,94 @@ export type ArticleDetail = {
   objective: string;
   impact: string;
   result: string;
+  justification: string;
   keywords: string[];
 };
 
-// Fuente única de contenido: “Ley Nacional de Inteligencia Artificial.pdf” proporcionado.
-// Las formulaciones son síntesis explicativas para exposición pública; no reemplazan el texto normativo.
-export const articles: ArticleDetail[] = [
+type ArticleSeed = Omit<ArticleDetail, "justification">;
+
+// Síntesis técnica referencial a partir de los documentos entregados (UNESCO, OCDE,
+// NIST, Consejo de Europa, Canadá, UNICEF y exposición de motivos comparada).
+// No reemplaza ni interpreta de forma vinculante el texto de la propuesta boliviana.
+const articleJustifications: Record<number, string> = {
+  1: "Un marco para el ciclo de vida permite asignar responsabilidades y sostener las garantías cuando el sistema cambia, se despliega o se retira.",
+  2: "La adopción dispersa no crea capacidades propias; tratar la IA como prioridad articula inversión, talento, infraestructura y protección de derechos.",
+  3: "Una finalidad integral evita reducir la IA a eficiencia o tecnología y obliga a considerar derechos, productividad, diversidad y sostenibilidad de manera conjunta.",
+  4: "Delimitar los usos con efectos sustanciales en Bolivia evita vacíos de responsabilidad y permite concentrar la norma donde existe impacto real.",
+  5: "Las exclusiones preservan investigación, uso personal y software libre sin permitir que esas modalidades se utilicen para eludir las salvaguardas aplicables.",
+  6: "La IA se cruza con normas constitucionales y sectoriales; esta regla evita contradicciones y mantiene vigentes las protecciones más favorables.",
+  7: "Una definición común diferencia IA de automatización convencional y da certeza sobre qué sistemas requieren las obligaciones de la propuesta.",
+  8: "Conceptos compartidos para proveedor, implementador, alto impacto y supervisión humana permiten identificar quién responde durante cada etapa del ciclo de vida.",
+  9: "Principios tecnológicamente neutrales mantienen la orientación de derechos, transparencia, seguridad e inclusión aun cuando las herramientas evolucionen.",
+  10: "La información, explicación y revisión humana responden a la opacidad de decisiones automatizadas y permiten cuestionar resultados que afecten derechos u oportunidades.",
+  11: "Cuando una decisión significativa se toma solo con automatización, se requieren habilitación, garantías y control humano para proteger el debido proceso.",
+  12: "Niñez y grupos expuestos a discriminación pueden soportar daños desproporcionados; por ello necesitan salvaguardas reforzadas desde el diseño y uso.",
+  13: "El enfoque basado en riesgo concentra controles exigentes donde el posible daño es mayor, sin imponer cargas innecesarias a usos de impacto mínimo.",
+  14: "Empleo, salud, educación, crédito, justicia e infraestructura pueden condicionar derechos esenciales; identificarlos permite aplicar controles reforzados oportunamente.",
+  15: "La manipulación, la explotación de vulnerabilidades y la vigilancia injustificada pueden producir daños graves o irreversibles que no se corrigen solo con transparencia.",
+  16: "La biometría remota puede habilitar vigilancia desproporcionada y errores discriminatorios; su uso exige necesidad estricta, límites definidos y control judicial cuando corresponda.",
+  17: "Un deber general de diligencia evita zonas sin responsable y exige que cada actor adopte medidas proporcionales a los riesgos de su intervención.",
+  18: "Los efectos de un sistema de alto impacto cambian con datos, contexto y uso; la evaluación, el monitoreo y la supervisión deben ser continuos.",
+  19: "Datos legítimos y representativos, junto con documentación de versiones y límites, permiten detectar sesgos, explicar resultados y auditar fallas.",
+  20: "La seguridad, robustez y trazabilidad reducen fallas, ciberincidentes y usos no previstos, y aportan evidencia para investigar y corregir problemas.",
+  21: "La respuesta temprana a incidentes limita daños, preserva evidencia y permite corregir, restringir o retirar sistemas antes de que el riesgo se amplifique.",
+  22: "La IA generativa puede facilitar suplantación, fraude y desinformación; identificar contenido sintético y prevenir abusos fortalece la confianza pública.",
+  23: "Los modelos de propósito general y agentes pueden generar acciones inesperadas; permisos mínimos, registros y autorizaciones humanas reducen ese riesgo.",
+  24: "El Estado debe justificar su uso de IA por finalidad pública, necesidad y proporcionalidad, porque sus decisiones pueden afectar servicios y derechos de toda la población.",
+  25: "Un inventario y evaluación pública hacen visible dónde se usa IA estatal y permiten control, seguimiento y deliberación informada sobre sistemas de alto impacto.",
+  26: "Las compras públicas requieren datos, auditoría, continuidad y salida del proveedor para evitar dependencia tecnológica y conservar el control institucional.",
+  27: "La participación de proveedores extranjeros no debe crear vías de evasión: el control público, la fiscalización y las responsabilidades deben mantenerse.",
+  28: "Cada sector conoce sus riesgos propios; reglas mínimas comunes y aplicación sectorial evitan fragmentación sin sustituir competencias existentes.",
+  29: "Metas, responsables e indicadores evitan iniciativas aisladas y permiten orientar recursos escasos a resultados verificables de interés nacional.",
+  30: "La IA involucra Estado, academia, empresas y sociedad; un sistema articulado reduce duplicidades y facilita cooperación alrededor de capacidades compartidas.",
+  31: "La selección de sectores mediante evidencia, impacto y derechos dirige el esfuerzo público hacia problemas críticos y usos con mayor valor social.",
+  32: "Comunidades, plataformas, liderazgo y transferencia convierten inversiones aisladas en capacidades que pueden difundirse y sostenerse en el tiempo.",
+  33: "Sin conectividad, cómputo, datos y ciberseguridad, la adopción profundiza brechas y dependencia; la infraestructura es condición material para usar IA.",
+  34: "Estándares de calidad, interoperabilidad, seguridad y portabilidad hacen que los datos puedan ser usados legítimamente y sin encerrar a las instituciones.",
+  35: "Centros y redes de investigación fortalecen conocimiento local, formación avanzada y transferencia para adaptar soluciones a necesidades nacionales.",
+  36: "Los entornos controlados permiten probar innovación con límites, supervisión y salida segura antes de exponer a personas o servicios a riesgos no evaluados.",
+  37: "El apoyo a emprendimientos y capacidades productivas evita que el valor de la IA se concentre solo en grandes actores o proveedores externos.",
+  38: "La transferencia y la propiedad intelectual con condiciones claras hacen que la cooperación deje capacidades, documentación y aprendizaje en el país.",
+  39: "Poder auditar, proteger datos y sustituir proveedores reduce dependencias que pueden limitar decisiones públicas, continuidad de servicios o captura de valor.",
+  40: "El cómputo y los centros de datos consumen energía, agua y materiales; la sostenibilidad debe considerarse desde la planificación tecnológica.",
+  41: "La educación en IA necesita planificación inclusiva para que la tecnología fortalezca autonomía y no amplíe desigualdades de acceso o comprensión.",
+  42: "Razonamiento, pensamiento crítico y alfabetización digital permiten usar IA con criterio propio, detectar errores y evitar dependencia acrítica.",
+  43: "Combinar competencias para toda la población con trayectorias especializadas reduce brechas y, al mismo tiempo, forma el talento técnico necesario.",
+  44: "La incorporación educativa debe demostrar beneficios pedagógicos; de otro modo puede sustituir aprendizaje, reproducir sesgos o debilitar la evaluación.",
+  45: "Docentes e instituciones necesitan formación, recursos y reglas para acompañar una adopción segura, ética y coherente con el propósito educativo.",
+  46: "La educación superior y la investigación deben conectarse con prioridades nacionales y sectores productivos para convertir conocimiento en soluciones pertinentes.",
+  47: "Una red territorial distribuye oportunidades de formación e investigación más allá de los centros tradicionales y favorece el acceso en distintos territorios.",
+  48: "Las brechas rurales, territoriales y de accesibilidad pueden excluir a parte de la población; la inclusión debe ser condición de la política educativa.",
+  49: "La IA puede afectar contratación, asignación y gestión laboral; información, proporcionalidad y revisión humana previenen decisiones injustas o inexplicables.",
+  50: "La transición tecnológica puede ampliar desigualdades si no se anticipan cambios y se ofrecen formación y reconversión a las personas trabajadoras.",
+  51: "Los servicios públicos y esenciales deben ser accesibles e inclusivos para que la automatización no excluya a personas con barreras de acceso.",
+  52: "La diversidad lingüística y cultural necesita presencia en datos, herramientas y servicios para evitar una IA que reproduzca exclusión o invisibilización.",
+  53: "Voces, relatos, imágenes y conocimientos colectivos requieren respeto y control para prevenir apropiación, extracción o uso indebido de patrimonio cultural.",
+  54: "Niñas, niños y adolescentes requieren protección reforzada ante perfilado abusivo, riesgos de privacidad, contenido sintético nocivo y daños a su desarrollo.",
+  55: "Una instancia de dirección estratégica responde a la dispersión institucional y permite orientar la política de IA con continuidad y rendición de cuentas.",
+  56: "La composición plural equilibra responsabilidad estatal y conocimiento especializado, mejorando la legitimidad y la calidad técnica de las decisiones.",
+  57: "Atribuciones claras convierten la estrategia en coordinación, lineamientos, cooperación e informes públicos verificables.",
+  58: "La ejecución técnica permanente evita que la gobernanza quede solo en el nivel declarativo y aporta continuidad a tareas especializadas.",
+  59: "Registro, asistencia, coordinación, prospectiva y programas requieren una capacidad operativa definida para sostener la implementación cotidiana.",
+  60: "Los riesgos emergentes exigen análisis interdisciplinario e independiente que complemente, sin sustituir, las responsabilidades de las autoridades.",
+  61: "Conservar competencias sectoriales permite aplicar conocimiento especializado, mientras la coordinación asegura mínimos comunes de derechos y control.",
+  62: "La participación de universidades, empresas y sociedad civil incorpora experiencia diversa, fortalece la legitimidad y mejora la detección de impactos.",
+  63: "La articulación territorial adapta la política a necesidades locales y evita que las capacidades y beneficios se concentren en pocos espacios.",
+  64: "La prospectiva permite actualizar instrumentos ante cambios tecnológicos verificables, sin esperar a que los riesgos se vuelvan irreversibles.",
+  65: "Un registro aporta visibilidad sobre sistemas públicos y de alto impacto, condición para el control, la transparencia y la rendición de cuentas.",
+  66: "La evaluación y auditoría periódicas detectan efectos, sesgos e incidentes que pueden no ser visibles durante el diseño o la puesta en marcha.",
+  67: "Las obligaciones solo protegen si existen medidas para investigar, corregir, restringir o retirar sistemas cuando se identifican incumplimientos o daños.",
+  68: "Un régimen de infracciones y sanciones con debido proceso desincentiva incumplimientos y da eficacia práctica a las salvaguardas.",
+  69: "Sin recursos previstos, las obligaciones pueden quedar declarativas; fuentes trazables permiten una implementación gradual bajo control público.",
+  70: "La cooperación debe cerrar brechas de conocimiento, infraestructura y formación mediante transferencia efectiva, no generar dependencia permanente.",
+  71: "La integridad protege la independencia regulatoria y evita que aportes o cooperación condicionen normas, inspecciones, contrataciones o sanciones.",
+  72: "Metas, indicadores y evaluación anual permiten verificar avances, ajustar prioridades y hacer visible el uso de los recursos públicos.",
+  73: "Las normas técnicas hacen operativa la ley, pero deben mantener las garantías y no modificar por vía reglamentaria sus elementos esenciales."
+};
+
+// Fuente legal primaria: “Ley Nacional de Inteligencia Artificial.pdf” proporcionado.
+// Objetivo, impacto y resultado son síntesis explicativas para exposición pública.
+const articleSeeds: ArticleSeed[] = [
   { number: 1, title: "Título I", legalTitle: "Objeto", objective: "Establecer un marco legal para todo el ciclo de vida de los sistemas y plataformas de IA.", impact: "Conecta desarrollo tecnocientífico con derechos, seguridad, diversidad cultural, ambiente y responsabilidad humana.", result: "La IA se orienta con reglas desde su planificación hasta su eventual retiro.", keywords: ["marco legal", "ciclo de vida", "responsabilidad humana"] },
   { number: 2, title: "Título I", legalTitle: "Prioridad nacional e interés público", objective: "Dar prioridad al desarrollo soberano, seguro, inclusivo y sostenible de capacidades de IA.", impact: "Integra investigación, talento, infraestructura, innovación y gestión de riesgos en sectores públicos, privados, académicos y sociales.", result: "La IA se reconoce como una agenda nacional de interés público.", keywords: ["prioridad", "capacidades", "soberanía"] },
   { number: 3, title: "Título I", legalTitle: "Finalidades", objective: "Definir los resultados nacionales que persigue la propuesta: riesgos, Estado, productividad, trabajo, talento, derechos, diversidad, infraestructura y ambiente.", impact: "Da un rumbo común para que regulación y desarrollo no avancen por separado.", result: "Bolivia dispone de una visión integral para orientar sus decisiones sobre IA.", keywords: ["finalidades", "Estado", "talento", "derechos"] },
@@ -49,25 +131,74 @@ export const articles: ArticleDetail[] = [
   { number: 73, title: "Título VIII", legalTitle: "Reglamentación técnica", objective: "Habilitar reglamentos y normas técnicas para procedimientos, pruebas, auditoría y registro.", impact: "Evita que el desarrollo técnico reduzca derechos o altere elementos esenciales de la propuesta.", result: "La aplicación puede detallarse sin perder las garantías centrales.", keywords: ["reglamentación", "normas técnicas", "derechos"] }
 ];
 
+export const articles: ArticleDetail[] = articleSeeds.map((article) => ({
+  ...article,
+  justification: articleJustifications[article.number]
+}));
+
 export const articleByNumber = new Map(articles.map((article) => [article.number, article]));
 
 export type SearchArticle = {
+  kind: "article";
+  id: string;
   number: number;
   titleRoman: string;
   titleNumber: number;
   titleName: string;
   legalTitle: string;
-  summary: string;
+  objective: string;
+  justification: string;
 };
 
+export type SearchChapter = {
+  kind: "chapter";
+  id: string;
+  titleRoman: string;
+  titleNumber: number;
+  titleName: string;
+  chapterRoman: string;
+  chapterName: string;
+  range: string;
+  objective: string;
+  justification: string;
+};
+
+export type SearchResult = SearchArticle | SearchChapter;
+
+type LawChapterSource = { nombre: string; rango: string };
+type LawTitleSource = {
+  numero: string;
+  nombre: string;
+  rango: string;
+  objetivo: string;
+  capitulos: LawChapterSource[];
+};
 type LawSearchSource = {
-  titulos: Array<{ numero: string; nombre: string }>;
+  titulos: LawTitleSource[];
   articulos: Array<{ n: number; nombre: string; titulo: string; resumen: string }>;
 };
 
-type LawFullTextSource = Record<string, string>;
+const chapterDetails: Record<string, Pick<SearchChapter, "objective" | "justification">> = {
+  "I:1": { objective: "Definir el objeto, prioridad, finalidades, alcance y relación de la propuesta con otras normas.", justification: "Un marco común evita vacíos de responsabilidad y orienta el desarrollo de IA hacia capacidades nacionales, derechos y fines legítimos." },
+  "I:2": { objective: "Precisar las definiciones esenciales y los principios rectores aplicables a los sistemas de IA.", justification: "Conceptos y principios compartidos permiten aplicar obligaciones de forma coherente aun cuando la tecnología evolucione." },
+  "II:1": { objective: "Reconocer derechos y protección reforzada para las personas afectadas por sistemas de IA.", justification: "Información, explicación, revisión humana y reparación responden a la opacidad y a los impactos desproporcionados sobre grupos vulnerables." },
+  "II:2": { objective: "Clasificar los sistemas por riesgo y prohibir prácticas incompatibles con dignidad, autonomía e igualdad.", justification: "Los controles proporcionales concentran esfuerzos donde el daño es mayor; los riesgos irreversibles requieren límites claros antes de que ocurran." },
+  "III:1": { objective: "Exigir diligencia, gestión de riesgos, datos adecuados, seguridad, trazabilidad e intervención ante incidentes.", justification: "Los riesgos cambian durante todo el ciclo de vida; evaluación, documentación y corrección hacen verificable la responsabilidad." },
+  "III:2": { objective: "Regular el uso, inventario, contratación y coordinación sectorial de IA en el Estado.", justification: "Las decisiones públicas requieren finalidad, proporcionalidad, transparencia y control institucional para no trasladar riesgos a la ciudadanía." },
+  "IV:1": { objective: "Organizar una estrategia nacional, un sistema tecnocientífico y prioridades de intervención en IA.", justification: "Metas, responsables e indicadores evitan iniciativas dispersas y enfocan recursos en problemas públicos con evidencia e impacto." },
+  "IV:2": { objective: "Fortalecer infraestructura, datos, investigación, innovación, emprendimientos, transferencia y soberanía tecnológica.", justification: "Sin capacidades propias, la adopción puede profundizar brechas y dependencia; la infraestructura y el talento permiten generar valor local." },
+  "V:1": { objective: "Impulsar formación, competencias fundamentales, especialización, docencia, educación superior e investigación en IA.", justification: "La educación planificada previene una adopción acrítica y permite que la IA fortalezca aprendizaje, pensamiento crítico y autonomía." },
+  "V:2": { objective: "Articular una red territorial de talento y medidas de inclusión educativa y de accesibilidad.", justification: "Distribuir oportunidades de formación e investigación reduce brechas rurales, territoriales y de acceso para que el beneficio no se concentre." },
+  "VI:1": { objective: "Proteger derechos laborales y promover una transición justa frente a los cambios que produce la IA.", justification: "La automatización puede modificar oportunidades y condiciones de trabajo; información, revisión humana, formación y reconversión previenen desigualdades." },
+  "VI:2": { objective: "Asegurar inclusión, respeto a lenguas y cultura, protección de conocimientos colectivos y salvaguardas para la niñez.", justification: "Los impactos de IA no son neutrales: una protección reforzada evita exclusión, apropiación cultural y daños a grupos con mayor vulnerabilidad." },
+  "VII:1": { objective: "Crear y organizar el Consejo Nacional de Inteligencia Artificial como instancia de dirección estratégica.", justification: "Una conducción plural reduce la fragmentación institucional y conecta la política con conocimiento técnico, coordinación y rendición de cuentas." },
+  "VII:2": { objective: "Establecer la Unidad Operativa, la asesoría interdisciplinaria y la coordinación sectorial y territorial.", justification: "La gobernanza necesita capacidad técnica continua, evidencia independiente y articulación para que las obligaciones se implementen de manera coherente." },
+  "VIII:1": { objective: "Crear instrumentos de registro, evaluación, auditoría, fiscalización, medidas e infracciones para sistemas relevantes.", justification: "La transparencia y la evaluación permiten detectar fallas, sesgos e incumplimientos y corregirlos antes de que los daños se amplifiquen." },
+  "VIII:2": { objective: "Organizar financiamiento, cooperación, integridad, planificación, evaluación y reglamentación técnica para la implementación.", justification: "Los principios requieren recursos, transferencia de capacidades e independencia de decisiones para convertirse en resultados sostenibles y verificables." }
+};
 
-let searchIndexPromise: Promise<SearchArticle[]> | undefined;
+const romanChapters = ["I", "II"] as const;
+let searchIndexPromise: Promise<SearchResult[]> | undefined;
 
 function normalize(value: string): string {
   return value
@@ -78,58 +209,91 @@ function normalize(value: string): string {
     .trim();
 }
 
-function officialParagraph(fullText: string | undefined, fallback: string): string {
-  if (!fullText) return fallback;
-  return fullText
-    .replace(/^Artículo\s+\d+\.\s*\([^)]*\)\.\s*/i, "")
-    .replace(/\s+/g, " ")
-    .trim();
+function titleMatches(value: string, title: LawTitleSource, index: number): boolean {
+  const requested = normalize(value);
+  return requested === normalize(title.numero) || requested === String(index + 1);
 }
 
-async function loadSearchIndex(): Promise<SearchArticle[]> {
+async function loadSearchIndex(): Promise<SearchResult[]> {
   if (!searchIndexPromise) {
-    searchIndexPromise = Promise.all([
-      fetch("./assets/data/ley-search-index.json"),
-      fetch("./assets/data/article-fulltext.json")
-    ])
-      .then(async ([indexResponse, fullTextResponse]) => {
-        if (!indexResponse.ok || !fullTextResponse.ok) throw new Error("No se pudo cargar el índice de la Ley.");
-        return {
-          source: await indexResponse.json() as LawSearchSource,
-          fullTexts: await fullTextResponse.json() as LawFullTextSource
-        };
+    searchIndexPromise = fetch("./assets/data/ley-search-index.json")
+      .then(async (response) => {
+        if (!response.ok) throw new Error("No se pudo cargar el índice de la Ley.");
+        return response.json() as Promise<LawSearchSource>;
       })
-      .then(({ source, fullTexts }) => {
-        const titles = new Map(source.titulos.map((title, index) => [title.numero, { name: title.nombre, number: index + 1 }]));
-        return source.articulos.map((article) => {
-          const title = titles.get(article.titulo);
+      .then((source) => {
+        const titleMap = new Map(source.titulos.map((title, index) => [title.numero, { ...title, number: index + 1 }]));
+        const chapters: SearchChapter[] = source.titulos.flatMap((title, titleIndex) => title.capitulos.map((chapter, chapterIndex) => {
+          const key = `${title.numero}:${chapterIndex + 1}`;
+          const detail = chapterDetails[key];
           return {
+            kind: "chapter",
+            id: `chapter-${title.numero}-${chapterIndex + 1}`,
+            titleRoman: title.numero,
+            titleNumber: titleIndex + 1,
+            titleName: title.nombre,
+            chapterRoman: romanChapters[chapterIndex] ?? String(chapterIndex + 1),
+            chapterName: chapter.nombre,
+            range: chapter.rango,
+            objective: detail?.objective ?? title.objetivo,
+            justification: detail?.justification ?? "La propuesta articula capacidades, garantías y mecanismos de implementación para responder a los riesgos y oportunidades de la IA."
+          };
+        }));
+        const articles: SearchArticle[] = source.articulos.map((article) => {
+          const title = titleMap.get(article.titulo);
+          return {
+            kind: "article",
+            id: `article-${article.n}`,
             number: article.n,
             titleRoman: article.titulo,
             titleNumber: title?.number ?? 0,
-            titleName: title?.name ?? "",
+            titleName: title?.nombre ?? "",
             legalTitle: article.nombre,
-            summary: officialParagraph(fullTexts[String(article.n)], article.resumen)
+            objective: article.resumen,
+            justification: articleJustifications[article.n] ?? "La medida permite que el desarrollo y uso de IA mantengan garantías de derechos, responsabilidad y capacidad institucional."
           };
         });
+        return [...chapters, ...articles];
       });
   }
   return searchIndexPromise;
 }
 
-export async function searchArticles(term: string): Promise<SearchArticle[]> {
+export function resultHeading(result: SearchResult): string {
+  if (result.kind === "article") return `Artículo ${result.number}. ${result.legalTitle}`;
+  return `Título ${result.titleRoman} · Capítulo ${result.chapterRoman}. ${result.chapterName}`;
+}
+
+export function resultContext(result: SearchResult): string {
+  if (result.kind === "article") return `Título ${result.titleRoman} · ${result.titleName}`;
+  return `${result.range} · ${result.titleName}`;
+}
+
+export async function searchLaw(term: string): Promise<SearchResult[]> {
   const query = normalize(term);
   if (!query) return [];
   const index = await loadSearchIndex();
+  const articles = index.filter((item): item is SearchArticle => item.kind === "article");
+  const chapters = index.filter((item): item is SearchChapter => item.kind === "chapter");
   const articleMatch = query.match(/^(?:art(?:iculo)?\.?\s*)?(\d{1,2})$/);
-  if (articleMatch) return index.filter((article) => article.number === Number(articleMatch[1]));
-  const titleMatch = query.match(/^titulo\s+(\d+|[ivxlcdm]+)$/i);
-  if (titleMatch) {
-    const requested = normalize(titleMatch[1]);
-    return index.filter((article) => normalize(article.titleRoman) === requested || String(article.titleNumber) === requested);
+  if (articleMatch) return articles.filter((article) => article.number === Number(articleMatch[1]));
+
+  const chapterMatch = query.match(/^cap(?:itulo)?\s+([\divxlcdm]+)(?:\s*(?:del|de)?\s*titulo\s+([\divxlcdm]+))?$/i);
+  if (chapterMatch) {
+    const chapterToken = normalize(chapterMatch[1]);
+    const titleToken = chapterMatch[2] ? normalize(chapterMatch[2]) : null;
+    return chapters.filter((chapter) => {
+      const matchesChapter = chapterToken === normalize(chapter.chapterRoman) || chapterToken === String(romanChapters.indexOf(chapter.chapterRoman as "I" | "II") + 1);
+      const matchesTitle = !titleToken || titleToken === normalize(chapter.titleRoman) || titleToken === String(chapter.titleNumber);
+      return matchesChapter && matchesTitle;
+    });
   }
-  return index.filter((article) => {
-    const searchable = normalize(`Artículo ${article.number} Art. ${article.number} Título ${article.titleRoman} ${article.titleNumber} ${article.titleName} ${article.legalTitle} ${article.summary}`);
-    return searchable.includes(query);
-  });
+
+  const titleMatch = query.match(/^titulo\s+([\divxlcdm]+)$/i);
+  if (titleMatch) {
+    const requested = titleMatch[1];
+    return chapters.filter((chapter) => requested === normalize(chapter.titleRoman) || requested === String(chapter.titleNumber));
+  }
+
+  return index.filter((result) => normalize(`${resultHeading(result)} ${resultContext(result)} ${result.objective} ${result.justification}`).includes(query));
 }

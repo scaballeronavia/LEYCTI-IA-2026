@@ -59,7 +59,8 @@
   .slide { padding-top: 30px; padding-bottom: 24px; }
   .slide-header { margin-bottom: 23px; }
   .lead { margin-top: 11px; line-height: 1.4; }
-  .chapter-core { min-height: 290px; padding: 23px; }
+  .chapter-core { min-height: 0; padding: 20px 23px; }
+  .outcome-line section { min-height: 80px; padding: 11px; }
   .article-card { padding: 12px; }
   .article-card h3 { font-size: 15px; }
   .objective-core { min-height: 260px; }

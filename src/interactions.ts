@@ -1,4 +1,4 @@
-import { articleByNumber, searchArticles, type SearchArticle } from "./articles-data.js";
+import { articleByNumber, resultContext, resultHeading, searchLaw, type SearchResult } from "./articles-data.js";
 
 export class InteractionController {
   private readonly portal: HTMLElement;
@@ -31,10 +31,11 @@ export class InteractionController {
             <p class="article-intro">Resumen explicativo para público general.</p>
             <div class="article-detail-grid">
               <section><span>OBJETIVO</span><p>${article.objective}</p></section>
+              <section class="justification-detail"><span>JUSTIFICACIÓN</span><p>${article.justification}</p></section>
               <section><span>IMPACTO</span><p>${article.impact}</p></section>
               <section><span>RESULTADO</span><p>${article.result}</p></section>
             </div>
-            <p class="article-source">Base legal: Propuesta de Ley Nacional de Inteligencia Artificial · Art. ${article.number}.</p>
+            <p class="article-source">Base legal: Propuesta de Ley Nacional de Inteligencia Artificial · Art. ${article.number}. Justificación: síntesis técnica basada en el repositorio documental proporcionado.</p>
           </div>
         </article>
       </div>`;
@@ -53,7 +54,7 @@ export class InteractionController {
             <button type="button" data-close-overlay aria-label="Cerrar búsqueda">×</button>
           </div>
           <input id="law-search" type="search" autocomplete="off" placeholder="Ej.: Art. 65, Título VIII, educación…">
-          <p class="search-hint">Busque por número de artículo, por título o por tema. Cada resultado muestra una descripción resumida del artículo según el PDF adjunto.</p>
+          <p class="search-hint">Busque por artículo, título, capítulo o tema. Cada resultado muestra primero el objetivo y luego la justificación técnica.</p>
           <div class="search-results" aria-live="polite"></div>
         </section>
       </div>`;
@@ -67,10 +68,10 @@ export class InteractionController {
         results.innerHTML = "";
         return;
       }
-      results.innerHTML = "<p class=\"search-hint\">Buscando en los 73 artículos de la propuesta…</p>";
-      let matches: SearchArticle[] = [];
+      results.innerHTML = "<p class=\"search-hint\">Buscando en los 73 artículos y 16 capítulos de la propuesta…</p>";
+      let matches: SearchResult[] = [];
       try {
-        matches = await searchArticles(query);
+        matches = await searchLaw(query);
       } catch (error) {
         console.error(error);
         results.innerHTML = "<p class=\"search-hint\">No fue posible cargar el índice de la propuesta.</p>";
@@ -78,34 +79,34 @@ export class InteractionController {
       }
       if (input.value !== query) return;
       results.innerHTML = matches.length
-        ? matches.map((article) => `<button type="button" data-search-article="${article.number}"><p class="search-result-paragraph"><strong>Artículo ${article.number}. (${article.legalTitle}).</strong> ${article.summary}</p></button>`).join("")
-        : "<p class=\"search-hint\">No se encontraron artículos para esa búsqueda.</p>";
-      results.querySelectorAll<HTMLButtonElement>("[data-search-article]").forEach((button) => {
+        ? matches.map((result) => `<button type="button" data-search-result="${result.id}"><strong>${resultHeading(result)}</strong><span class="search-result-context">${resultContext(result)}</span><p class="search-result-objective"><b>Objetivo:</b> ${result.objective}</p><p class="search-result-justification"><b>Justificación:</b> ${result.justification}</p></button>`).join("")
+        : "<p class=\"search-hint\">No se encontraron artículos ni capítulos para esa búsqueda.</p>";
+      results.querySelectorAll<HTMLButtonElement>("[data-search-result]").forEach((button) => {
         button.addEventListener("click", () => {
-          const number = Number(button.dataset.searchArticle);
-          const article = matches.find((item) => item.number === number);
-          if (!article) return;
+          const id = button.dataset.searchResult;
+          const result = matches.find((item) => item.id === id);
+          if (!result) return;
           this.close(false);
-          this.openSearchSummary(article, button);
+          this.openSearchSummary(result, button);
         });
       });
     });
     input?.focus();
   }
 
-  private openSearchSummary(article: SearchArticle, trigger: HTMLElement): void {
+  private openSearchSummary(result: SearchResult, trigger: HTMLElement): void {
     this.lastFocused = trigger;
     this.overlayKind = "article";
     this.portal.innerHTML = `
       <div class="modal-backdrop article-backdrop" data-close-overlay>
         <article class="article-drawer" role="dialog" aria-modal="true" aria-labelledby="search-article-title">
-          <button class="close-drawer" type="button" data-close-overlay aria-label="Cerrar resultado del Artículo ${article.number}">×</button>
+          <button class="close-drawer" type="button" data-close-overlay aria-label="Cerrar resultado de búsqueda">×</button>
           <div class="article-modal-scroll">
-            <p class="eyebrow">ARTÍCULO ${article.number} · TÍTULO ${article.titleRoman.toUpperCase()}</p>
-            <h2 id="search-article-title">${article.legalTitle}</h2>
-            <p class="article-intro">${article.titleName}</p>
-            <p class="article-search-summary">${article.summary}</p>
-            <p class="article-source">Fuente: Propuesta de Ley Nacional de Inteligencia Artificial.pdf · Art. ${article.number}.</p>
+            <p class="eyebrow">${resultContext(result).toUpperCase()}</p>
+            <h2 id="search-article-title">${resultHeading(result)}</h2>
+            <div class="search-summary-block objective-summary"><span>OBJETIVO</span><p>${result.objective}</p></div>
+            <div class="search-summary-block justification-summary"><span>JUSTIFICACIÓN</span><p>${result.justification}</p></div>
+            <p class="article-source">Objetivo: síntesis de la Propuesta de Ley Nacional de Inteligencia Artificial. Justificación: síntesis técnica basada en el repositorio documental proporcionado.</p>
           </div>
         </article>
       </div>`;
