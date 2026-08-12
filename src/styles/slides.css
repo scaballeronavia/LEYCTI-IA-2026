@@ -36,25 +36,39 @@
 .objective-foot p { margin: 0; }
 
 .architecture-slide { padding-top: clamp(26px, 3.4vw, 54px); }
-.architecture-slide .slide-header { margin-bottom: clamp(15px, 2vw, 25px); }
-.architecture-layout { max-width: 1220px; display: grid; grid-template-columns: .78fr 1.22fr; gap: 13px; margin: 0 auto; }
-.architecture-base { min-height: 258px; display: flex; flex-direction: column; padding: clamp(20px, 2vw, 27px); background: radial-gradient(circle at 22% 88%, rgba(244,124,0,.19), transparent 39%), #1b1a18; border-top: 3px solid var(--tecba-orange); }
-.architecture-base h2 { max-width: 350px; margin: 0; color: #fff; font-size: clamp(25px, 2.2vw, 39px); letter-spacing: -.05em; line-height: 1.04; }
-.architecture-base > p { margin: 15px 0 0; color: #b7b2aa; font-size: 13px; line-height: 1.43; }
+.architecture-slide .slide-header { margin-bottom: clamp(13px, 1.8vw, 22px); }
+.lifecycle-layout { max-width: 1220px; display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: clamp(20px, 3.3vw, 52px); align-items: center; margin: 0 auto; }
+.lifecycle-intro { min-height: 330px; display: flex; flex-direction: column; justify-content: center; padding: 25px; background: radial-gradient(circle at 22% 88%, rgba(244,124,0,.19), transparent 39%), #1b1a18; border-top: 3px solid var(--tecba-orange); }
+.lifecycle-intro h2 { max-width: 350px; margin: 0; color: #fff; font-size: clamp(25px, 2.15vw, 37px); letter-spacing: -.05em; line-height: 1.04; }
+.lifecycle-intro > p { margin: 15px 0 0; color: #b7b2aa; font-size: 12px; line-height: 1.5; }
 .normative-chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: auto; padding-top: 20px; }
 .normative-chain span { padding: 5px 7px; border: 1px solid rgba(255,196,0,.3); color: var(--tecba-yellow); font-size: 9px; font-weight: 800; letter-spacing: .08em; }
 .normative-chain i { color: var(--tecba-orange); font-style: normal; }
-.architecture-base .architecture-note { color: #d5d0c9; font-size: 11px; line-height: 1.38; }
-.architecture-layers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.architecture-layer { min-height: 125px; display: grid; grid-template-columns: 37px 1fr; gap: 13px; align-items: start; padding: 15px; background: #1b1a18; border-left: 2px solid rgba(244,124,0,.68); }
-.architecture-layer:nth-child(2) { border-color: var(--tecba-yellow); }
-.architecture-layer:nth-child(3) { border-color: #79736a; }
-.architecture-layer:nth-child(4) { border-color: rgba(244,124,0,.4); }
-.layer-number { color: var(--tecba-orange); font-size: 11px; font-weight: 850; letter-spacing: .07em; }
-.architecture-layer h2 { margin: 0 0 6px; color: #fff; font-size: 17px; letter-spacing: -.035em; line-height: 1.08; }
-.architecture-layer p { margin: 0; color: #aaa69f; font-size: 11px; line-height: 1.42; }
-.architecture-layer strong { color: #d9d4cb; font-weight: 750; }
-.architecture-outcomes { max-width: 1220px; margin-right: auto; margin-left: auto; }
+.lifecycle-cycle { min-height: 330px; position: relative; margin: 0; isolation: isolate; }
+.cycle-orbit { position: absolute; z-index: -1; border: 1px solid rgba(244,124,0,.27); border-radius: 50%; pointer-events: none; }
+.orbit-one { inset: 13px 9% 8px; }
+.orbit-two { inset: 46px 20% 41px; border-color: rgba(255,196,0,.2); }
+.cycle-step { position: absolute; display: grid; grid-template-columns: 27px 1fr; column-gap: 8px; width: 190px; padding: 10px 11px; border-left: 2px solid var(--tecba-orange); background: rgba(27,26,24,.97); box-shadow: 0 9px 22px rgba(0,0,0,.2); }
+.cycle-step:nth-of-type(4) { border-color: var(--tecba-yellow); }
+.cycle-step > span { grid-row: span 2; color: var(--tecba-orange); font-size: 10px; font-weight: 850; letter-spacing: .06em; }
+.cycle-step h2 { margin: 0; color: #fff; font-size: 14px; letter-spacing: -.03em; line-height: 1.06; }
+.cycle-step p { grid-column: 2; margin: 4px 0 0; color: #b7b2aa; font-size: 10px; line-height: 1.3; }
+.cycle-step small { grid-column: 2; margin-top: 6px; color: var(--tecba-yellow); font-size: 9px; font-weight: 780; letter-spacing: .05em; }
+.cycle-context { top: 0; left: 3%; }
+.cycle-data { top: 0; right: 3%; }
+.cycle-model { top: 104px; right: -1%; }
+.cycle-deploy { right: 12%; bottom: 0; }
+.cycle-monitor { bottom: 0; left: 8%; }
+.cycle-core { position: absolute; top: 50%; left: 50%; display: flex; width: 154px; height: 154px; flex-direction: column; align-items: center; justify-content: center; transform: translate(-50%, -50%); border: 1px solid rgba(255,196,0,.68); border-radius: 50%; background: radial-gradient(circle at 50% 40%, rgba(255,196,0,.22), rgba(244,124,0,.07) 49%, #171614 73%); text-align: center; box-shadow: 0 0 0 14px rgba(244,124,0,.035); }
+.cycle-core p { margin: 0; color: #fff; font-size: 19px; font-weight: 820; letter-spacing: -.045em; line-height: .94; }
+.cycle-core p i { color: var(--tecba-yellow); font-style: normal; }
+.cycle-core span { max-width: 116px; margin-top: 9px; color: #d5d0c9; font-size: 9px; line-height: 1.3; }
+.lifecycle-cycle figcaption { position: absolute; right: 3%; bottom: -31px; left: 8%; color: #918d85; font-size: 10px; line-height: 1.35; text-align: center; }
+.architecture-anchors { max-width: 1220px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 42px auto 0; background: rgba(255,255,255,.12); }
+.architecture-anchors section { min-height: 73px; padding: 11px 14px; background: #191816; }
+.architecture-anchors section:nth-child(2) { background: rgba(244,124,0,.1); }
+.architecture-anchors span { color: var(--tecba-yellow); font-size: 9px; font-weight: 850; letter-spacing: .12em; }
+.architecture-anchors p { margin: 6px 0 0; color: #d5d0c9; font-size: 11px; line-height: 1.36; }
 
 .chapter-stage { max-width: 1220px; display: grid; grid-template-columns: minmax(0, 1fr) 435px; gap: 13px; margin: 0 auto; }
 .chapter-core { min-height: 365px; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(25px, 3vw, 39px); position: relative; overflow: hidden; background: radial-gradient(circle at 90% 20%, rgba(244,124,0,.17), transparent 31%), #1b1a18; border-left: 3px solid var(--tecba-orange); }
